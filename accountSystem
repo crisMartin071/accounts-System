@@ -1,0 +1,358 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package boletin7;
+
+import datos.Banco;
+import datos.CuentaCorriente;
+import datos.Texto;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ *
+ * @author PC01
+ */
+public class sistemaCuentas {
+
+    /**
+     * @param args the command line arguments
+     */
+    static Scanner scanner = new Scanner(System.in);
+    static int respuesta;
+    static boolean cuentaCreada = false;
+    static boolean bancoAñadido = false;
+    static int contCuentas = 1;
+    static CuentaCorriente cuenta = new CuentaCorriente();
+    static Banco banco1 = new Banco();
+    static Banco banco2 = new Banco();
+    static Banco banco3 = new Banco();
+        
+    public static void main(String[] args) {
+        menu();
+    }
+    
+    /* This is the method which show a menu with the options*/
+    public static void menu(){
+        Texto texto = null;
+        System.out.println("Bienvenido a nuestra aplicacion!");
+        
+        do {
+            try{
+                System.out.println("¿Que operación desea realizar?");
+                System.out.println("1. Retirada de dinero");
+                System.out.println("2. Ingreso de dinero");
+                System.out.println("3. Mostrar información");
+                System.out.println("4. Crear una cuenta");
+                System.out.println("5. Banco");
+                System.out.println("6. Nota");
+                System.out.println("7. Salir");
+                System.out.println("- Ingrese una opcion: ");
+                respuesta = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (respuesta) {
+                    case 1:
+                        if(verificadorCuenta()){
+                            cuenta.retirarDinero();
+                        }
+                        break;
+
+                    case 2:
+                        if(verificadorCuenta()){
+                            cuenta.ingresarDinero();
+                        }
+                        break;
+
+                    case 3:
+                        if(verificadorCuenta()){
+                            cuenta.mostrarInformacion();
+                            cuenta.cambiadorDatos(banco1, banco2, banco3);
+                        }
+                        break;
+
+                    case 4:
+                        if(bancoAñadido){
+                            cuenta = metodoCreador();
+                            cuentaCreada = true;
+                        }else{
+                            System.out.println("Debes añadir un banco antes");
+                        }
+                        break;
+                        
+                    case 5:
+                        menuBanco();
+                        bancoAñadido = true;
+                        break;
+                        
+                    case 6:
+                        System.out.println("1. Añadir nota");
+                        System.out.println("2. Ver nota");
+                        int respuestaNota = scanner.nextInt();
+                        scanner.nextLine();
+                        
+                        if(respuestaNota == 1){
+                            texto = añadirNota();
+                        }else if(respuestaNota == 2){
+                            if(texto != null){
+                                System.out.println(mostrarNota(texto));
+                            }else{
+                                System.out.println("No hay notas");
+                            }
+                        }
+                        break;
+                }
+                System.out.println("------------------------------------");
+            }catch(InputMismatchException e){
+                System.out.println("ERROR: INGRESE UNA DE LAS OPCIONES");
+                scanner.next();
+            }
+        } while (respuesta != 7);
+        System.out.println("Hasta la proxima!!");
+    }
+    
+    public static void menuBanco(){
+        int respuesta;
+        
+        System.out.println("1. Añadir banco");
+        System.out.println("2. Modificar banco");
+        System.out.println("- Ingrese una opcion :");
+        respuesta = scanner.nextInt();
+        scanner.nextLine();
+        
+        switch(respuesta){
+            case 1:
+                String cuentaNueva = "";
+                do{
+                    if(contCuentas < 4){
+                        if(contCuentas != 1){
+                            System.out.println("¿Desea añadir más cuentas?(S/N)");
+                            cuentaNueva = scanner.nextLine();
+                            if(cuentaNueva.toUpperCase().equals("S")){
+
+                                switch(contCuentas){
+                                    case 2:
+                                        banco2 = añadirBanco();
+                                        System.out.println("Banco añadido");
+                                        contCuentas++;
+                                        break;
+
+
+                                    case 3:
+                                        banco3 = añadirBanco();
+                                        System.out.println("Banco añadido");
+                                        contCuentas++;
+                                    break;
+
+                                }
+                            }
+                        }else{
+                            banco1 = añadirBanco();
+                            System.out.println("Banco añadido");
+                            contCuentas++;
+                        }
+                    }else{
+                        System.out.println("Lo sentimos, ha llegado al limite de bancos añadidos");
+                    }
+                }while(contCuentas < 4 && !cuentaNueva.toUpperCase().equals("N"));
+                break;
+                
+            case 2:
+                System.out.println("Indique el nombre del banco a modificar: ");
+                System.out.println("1- "+ banco1.getNombre());
+                System.out.println("2- "+ banco2.getNombre());
+                System.out.println("3- "+ banco3.getNombre());
+                String nombreBanco = scanner.nextLine();
+                    
+                if(nombreBanco.equals(banco1.getNombre())){
+                    banco1.modificarBanco();
+                }else if(nombreBanco.equals(banco2.getNombre())){
+                    banco2.modificarBanco();
+                }else if(nombreBanco.equals(banco3.getNombre())){
+                    banco3.modificarBanco();
+                }else{
+                    System.out.println("ERROR: No existe ningun banco con el nombre ingresado");
+                }
+                System.out.println("Fin de la ejecución");
+                break;
+                
+            default:
+                System.out.println("Opción no válida");
+                break;
+        }
+    }
+    
+    public static CuentaCorriente metodoCreador(){
+        int opcion = 0, opcion2;
+        
+        do{
+            try{
+            System.out.println("1. Crear cuenta");
+            System.out.println("2. Iniciar sesion");
+            System.out.println("Elija una opcion: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine();
+            
+            if(opcion == 1){
+                System.out.println("1. Cuenta nueva");
+                System.out.println("2. Cuenta de prueba");
+                opcion2 = scanner.nextInt();
+                scanner.nextLine();
+                
+                if(opcion2 == 1){
+                    creadorCuenta();
+                }else if(opcion2 == 2){
+                    creadorCuentaPrueba();
+                }else{
+                    System.out.println("Opción no válida");
+                }
+                
+            }else if(opcion == 2){
+                iniciarSesion();
+            }else{
+                System.out.println("La opción seleccionada no existe");
+            }
+            }catch(InputMismatchException e){
+                System.out.println("ERROR: Debe de selecionar uno de los numeros");
+            }
+        }while(opcion != 1 && opcion != 2);
+        return cuenta;
+    }
+    
+    public static Texto añadirNota(){
+        Texto texto = new Texto();
+        texto.creadorTexto();
+        return texto;
+    }
+    
+    public static String mostrarNota(Texto texto){
+        return texto.getTexto();
+    }
+    
+    private static Banco añadirBanco(){
+        String nombre, direccion;
+        double capital;
+        
+        System.out.println("Ingrese el nombre del banco: ");
+        nombre = scanner.nextLine();
+        
+        System.out.println("Ingrese el capital del banco: ");
+        String entrada = scanner.nextLine();
+        
+        if(entrada.isEmpty()){
+            capital = 5.2;
+        }else{
+            try{
+                capital = Double.parseDouble(entrada);
+            }catch(NumberFormatException e){
+                System.out.println("Debes de indicar el capital en millones con un numero");
+                capital = 5.2;
+            }
+        }
+        
+        System.out.println("Ingrese la direccion del banco: ");
+        direccion = scanner.nextLine();
+        
+        return new Banco(nombre, direccion, capital);
+    }
+    
+    /**
+     * @param cuenta
+     * Method which make a new account
+     */
+    private static CuentaCorriente creadorCuenta() {
+        String nombre, dni;
+        
+        System.out.println("Ingrese un nombre para su cuenta: ");
+        nombre = scanner.nextLine();
+
+        System.out.println("Ingrese un DNI: ");
+        dni = scanner.nextLine();
+        
+        if(verificadorDNI(dni)){
+            cuenta = new CuentaCorriente(nombre, dni, banco1.getNombre());
+            return cuenta;
+        }else{
+            System.out.println("El DNI ingresado no cumple con los parametro pedidos (8 numeros y 1 letra)");
+            System.out.println("Operacion cancelada");
+            return cuenta;
+        }
+    }
+    
+    private static CuentaCorriente creadorCuentaPrueba() {
+        Double saldo;
+        boolean saldoValido = false;
+        
+        do{
+            try{
+                System.out.println("Ingrese el saldo base: ");
+                saldo = scanner.nextDouble();
+                scanner.nextLine();
+                cuenta = new CuentaCorriente(saldo);
+                saldoValido = true;
+                
+            }catch(InputMismatchException e){
+                System.out.println("Debe de introducir un valor numerico");
+                scanner.nextLine();
+            }
+        }while(saldoValido == false);
+        return cuenta;
+    }
+    
+    private static CuentaCorriente iniciarSesion(){
+        String nombre, dni;
+        Double saldo, limDescubierto;
+        
+        System.out.println("Ingrese el nombre del dueño de la cuenta: ");
+        nombre = scanner.nextLine();
+
+        System.out.println("Ingrese el DNI: ");
+        dni = scanner.nextLine();
+        if(verificadorDNI(dni)){
+            try{
+                System.out.println("Ingrese el saldo de la cuenta: ");
+                saldo = scanner.nextDouble();
+                scanner.nextLine();
+
+                System.out.println("Ingrese el limite descubierto que tiene la cuenta: ");
+                limDescubierto = scanner.nextDouble();
+                scanner.nextLine();
+
+                cuenta = new CuentaCorriente(saldo, limDescubierto, nombre, dni, banco1.getNombre());
+
+            }catch(InputMismatchException e){
+                System.out.println("ERROR: No has ingresado un numero");
+                scanner.nextLine();
+            }   
+        }else{
+            System.out.println("El DNI no cumple con los parametros esperados (8 numeros y 1 letra)");
+        }
+        return cuenta;
+    }
+    
+    /* This method verify if the user has an account*/
+    private static boolean verificadorCuenta(){
+        if(cuentaCreada == false){
+            System.out.println("No hay una cuenta creada");
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    /**
+     @param dni
+     * Method which verify the ID
+     */
+    private static boolean verificadorDNI(String dni){
+        String regex = "[0-9]{8}[A-Z]";
+        
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher  = pattern.matcher(dni);
+        
+        return matcher.matches();
+    }
+}
