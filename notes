@@ -1,0 +1,125 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package datos;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author PC01
+ */
+public class Texto {
+    private int longitud = 200;
+    private int contadorVocales = 0;
+    private String texto;
+    
+    public void creadorTexto(){
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Escriba a continuación lo que desee: ");
+        texto = scanner.nextLine();
+        
+        if(texto.length() <= longitud){
+            System.out.println("----------------------");
+            System.out.println("El texto:");
+            System.out.println(texto);
+            System.out.println("El texto ingresado tiene: "+contadorVocalesText()+" vocales.");
+        }else{
+            System.out.println("ERROR: El texto ingresado supera el limite de caracteres");
+        }
+    }
+    
+    private int contadorVocalesText(){
+    for(int i = 0; i < texto.length(); i++ ){
+                switch(texto.charAt(i)){
+                    case 'A':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'a':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'Á':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'á':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'E':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'e':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'É':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'é':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'I':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'i':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'Í':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'í':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'O':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'o':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'Ó':
+                        contadorVocales++;
+                        break;
+                   
+                    case 'ó':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'U':
+                        contadorVocales++;
+                        break;
+                    
+                    case 'u':
+                        contadorVocales++;
+                        break;
+                        
+                    case 'Ú':
+                        contadorVocales++;
+                        break;
+                        
+                    case 'ú':
+                        contadorVocales++;
+                        break;
+                
+                }
+            }
+        return contadorVocales;
+    }
+    
+    public String getTexto() {
+        return texto;
+    }
+}
