@@ -1,0 +1,87 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package datos;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+/**
+ *
+ * @author PC01
+ */
+public class Banco {
+    private String nombre, direccion;
+    private double capital;
+    private Scanner scanner = new Scanner(System.in);
+
+    public Banco() {
+    }
+    
+    public Banco(String nombre, String direccion, double capital) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.capital = capital;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public double getCapital() {
+        return capital;
+    }
+
+    
+    public void modificarBanco(){
+        String respuesta;
+        
+        System.out.println("¿Que desea modificar?");
+        respuesta = scanner.nextLine();
+        
+        if((respuesta.toUpperCase()).equalsIgnoreCase("CAPITAL") || (respuesta.toUpperCase()).equalsIgnoreCase("DIRECCION")){
+            
+            switch(respuesta.toUpperCase()){
+                case "CAPITAL":
+                    modificarCapital();
+                    break;
+                    
+                case "DIRECCION":
+                    modificarDireccion();
+                    break;
+                }
+        }else{
+            System.out.println("ERROR: Recuerda que solo se puede actualizar el capital o la direccion");
+        }
+    }
+    
+    private void modificarCapital(){
+        try{
+            System.out.println("Indique el capital actual del banco en millones: ");
+            Double nuevoCapital = scanner.nextDouble();
+            scanner.nextLine();
+            
+            if(nuevoCapital < 0){
+                System.out.println("ERROR: No puede indicar un capital menor a 0");
+            }else{
+                capital = nuevoCapital;
+                System.out.println("Cambios confirmados");
+            }
+            
+        }catch(InputMismatchException e){
+            System.out.println("ERROR: Debe de introducir un valor numerico en millones");
+            scanner.nextLine();
+        }
+    }
+    
+    private void modificarDireccion(){
+        System.out.println("Indique el direccion actual: ");
+        direccion = scanner.nextLine();
+        System.out.println("Cambios confirmados"); 
+    }
+}
