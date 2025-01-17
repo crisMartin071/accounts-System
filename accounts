@@ -1,0 +1,164 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package datos;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+/**
+ *
+ * @author PC01
+ */
+public class Cuentas {
+
+    private double saldo, limDescubierto;
+    private String nombre, dni, banco;
+    private Scanner scanner = new Scanner(System.in);
+
+    public Cuentas() {
+    }
+
+    /* This code is used to create an object*/
+    public Cuentas(String nombre, String dni, String banco) {
+        this.nombre = nombre;
+        this.dni = dni;
+        this.banco = banco;
+        saldo = 0;
+        limDescubierto = -50;
+    }
+
+    public Cuentas(double saldo, double limDescubierto, String nombre, String dni, String banco) {
+        this.saldo = saldo;
+        this.limDescubierto = limDescubierto;
+        this.nombre = nombre;
+        this.dni = dni;
+        this.banco = banco;
+    }
+
+    public Cuentas(double saldo) {
+        this.saldo = saldo;
+        this.limDescubierto = -50;
+    }
+
+    /* This method check if is posible remove the money and make calculate the balance*/
+    public void retirarDinero() {
+        double dinero;
+
+        try {
+            System.out.println("Indique la cantidad deseada para retirar: ");
+            dinero = scanner.nextDouble();
+            scanner.nextLine();
+
+            if (dinero < 0 || saldo-dinero < limDescubierto) {
+                System.out.println("ERROR: La cantidad indicada no esta dentro de los parametros");
+            } else {
+                System.out.println("Operacion en curso...");
+                saldo = saldo - dinero;
+            }
+
+            System.out.println("Fin de la operación");
+
+        } catch (InputMismatchException e) {
+            System.out.println("ERROR: No has indicado un valor numerico");
+            scanner.nextLine();
+        }
+    }
+
+    /* This method add money to the account*/
+    public void ingresarDinero() {
+        double dinero = 0;
+
+        try {
+            System.out.println("Indique la cantida a ingresar: ");
+            dinero = scanner.nextDouble();
+            scanner.nextLine();
+
+            if (dinero <= 0) {
+                throw new IllegalArgumentException("La cantidad indicada no se puede ingresar");
+            } else {
+                saldo = saldo + dinero;
+
+                System.out.println("Ingreso en su cuenta de " + dinero + "€");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("No has ingresado una cantidad numerica");
+            scanner.nextLine();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /* The method show the information about the account*/
+    public void mostrarInformacion() {
+        System.out.println("Cuenta corriente");
+        System.out.println("Nombre: " + nombre + " DNI: " + dni);
+        System.out.println("Banco: "+ banco);
+        System.out.println("Saldo actual: " + saldo +"€");
+        System.out.println("Limite descubierto: " + limDescubierto);
+    }
+
+    /* This is an optional method which change the information about account*/
+    public void cambiadorDatos(Banco banco1, Banco banco2, Banco banco3) {
+        System.out.println("¿Desea modificar algo? S/N");
+        String respuesta = scanner.nextLine();
+
+        if (respuesta.toUpperCase().equals("S")) {
+            System.out.println("¿Que desea modificar?(Nombre/Limite descubierto/Banco)");
+            String aspecto = scanner.nextLine();
+
+            switch (aspecto.toUpperCase()) {
+
+                case "NOMBRE":
+                    System.out.println("Ingrese un nuevo nombre: ");
+                    nombre = scanner.nextLine();
+                    System.out.println("Cambios confirmados");
+                    break;
+
+                case "LIMITE DESCUBIERTO":
+                    try{
+                        System.out.println("Ingrese un nuevo limite descubierto: ");
+                        limDescubierto = scanner.nextDouble();
+                        scanner.nextLine();
+                        System.out.println("Cambios confirmados");
+                    }catch(IllegalArgumentException e){
+                        System.out.println("ERROR: Debe de ingresar un valor numerico");
+                    }
+                    
+                    break;
+                    
+                case "BANCO":
+                    System.out.println("Ingrese el nombre de su nuevo banco: ");
+                    String entrada = scanner.nextLine();
+                    
+                    if (entrada.isEmpty()) {
+                        banco = " ";
+                    }else{
+                        if(entrada.equals(banco)){
+                            System.out.println("Has seleccionado tu banco actual");
+                        }else{
+                            if(entrada.equalsIgnoreCase(banco1.getNombre())){
+                                banco = banco1.getNombre();
+                            }else if(entrada.equalsIgnoreCase(banco2.getNombre())){
+                                banco = banco2.getNombre();
+                            }else if(entrada.equalsIgnoreCase(banco3.getNombre())){
+                                banco = banco3.getNombre();
+                            }else{
+                                System.out.println("El nombre del banco no existe");
+                            }
+                        }
+                    }
+                    
+                    break;
+
+                default:
+                    System.out.println("ERROR: recuerda que los valores DNI y saldo no se pueden modificar"
+                            + "debe de ponerse en contacto con su banco para ello");
+                    break;
+            }
+        } else {
+            System.out.println("No se han realizado cambios");
+        }
+    }
+}
